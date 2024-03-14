@@ -1,3 +1,5 @@
+#pragma once
+
 #include <exception>
 #include <string>
 
@@ -8,7 +10,7 @@ namespace Scanner {
         std::string message;
 
     public:
-        explicit GenericException(char * msg) :
+        GenericException(char * msg) :
                 message(msg)
         {};
 

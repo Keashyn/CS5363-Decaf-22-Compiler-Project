@@ -72,7 +72,7 @@ void test_exception_type(void)
     TEST_EXCEPTION(some_function(THROW_TEST_EXC), std::exception);
     TEST_EXCEPTION(some_function(THROW_INVALID_ARG), std::exception);
 
-    /* Fundemental types used as exceptions work too. */
+    /* Fundamentals types used as exceptions work too. */
     TEST_EXCEPTION(some_function(THROW_CHAR_PTR), const char*);
     TEST_EXCEPTION(some_function(THROW_INT), int);
 

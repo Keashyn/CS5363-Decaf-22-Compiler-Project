@@ -1,3 +1,5 @@
+#pragma once
+
 #include <locale>
 
 class isAlpha
@@ -33,13 +35,31 @@ public:
     }
 };
 
+/*
+    This check is only for possible single char operators
+*/
 class isOperator
 {
 public:
     bool operator() (const char &c) const
     {
-        std::string operators("+-*/%<>=|!");
+        std::string operators("+-*/%<>=!&|");
 
+        return operators.find(c) != std::string::npos;
+    }
+};
+
+/*
+    This check is only for double char operators, while some operators
+    like >=, ==, etc. are not included here because they have single char
+    representations, thus their collection will be done in map
+*/
+class isOnlyDoubleCharOperator
+{
+public:
+    bool operator() (const char &c) const
+    {
+        std::string operators("&|");
         return operators.find(c) != std::string::npos;
     }
 };

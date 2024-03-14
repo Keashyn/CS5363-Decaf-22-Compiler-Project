@@ -1,4 +1,5 @@
 #pragma once
+
 #include <ostream>
 #include <string>
 #include <map>
@@ -11,6 +12,9 @@ namespace Scanner {
         enum class Type {
             // Special ERROR to allow printing of errors without breaking main loop
             ERROR,
+
+            // Special Type for parsing
+            EMPTY,
 
             // Symbols
             Operator,
@@ -53,29 +57,61 @@ namespace Scanner {
             END
         };
 
+        enum class SubType {
+            Operand,
+            Call,
+            Assign,
+            Paren,
+            Comma,
+            And,
+            Or,
+            LessThan,
+            LessEqual,
+            GreaterThan,
+            GreaterEqual,
+            Equal,
+            NotEqual,
+            Subtract,
+            Add,
+            Divide,
+            Multiply,
+            Modulus,
+            Not,
+            UnaryNegative,
+        };
+
         static std::map<Type, std::string> enumName;
 
         static int identifierMaxLength;
 
+        static std::string getTTypeName(const Type &type) {
+            return "T_" + getTypeName(type);
+        };
+
         static std::string getTypeName(const Type &type) {
             return (enumName.find(type) != enumName.end()) ?
-                   "T_" + enumName.find(type)->second :
+                   enumName.find(type)->second :
                    std::string("ERROR");
         };
 
-        // usefule identifier keywords for quick lookup
+        // useful identifier keywords for quick lookup
         static std::map<std::string, Type> keywords;
 
         // useful multiple character operators for quick lookup
         static std::map<std::string, Type> operators;
 
+        static std::map<std::string, SubType> subTypes;
+
         Type type;
+        SubType subType;
         std::string value;
+        std::string lineInfo;
         int lineNumber;
         int colStart;       // only column start since column end can be inferred by colStart + tokenString.len()
 
         Token():
                 type(Type::END),
+                subType(SubType::Operand),
                 value(""),
                 lineNumber(-1),
                 colStart(-1)
@@ -84,6 +120,19 @@ namespace Scanner {
 
         template<typename TokenValue>
         const TokenValue getValue() const;
+
+        bool operator== (const Token& o)
+        {
+            if (
+                    type == o.type &&
+                    value.compare(o.value) == 0 &&
+                    lineNumber == o.lineNumber &&
+                    colStart == o.colStart
+                    )
+                return true;
+
+            return false;
+        };
     };
 }
 

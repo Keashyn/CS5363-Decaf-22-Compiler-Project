@@ -54,6 +54,27 @@ namespace Scanner{
             {"&&", Type::And},
     };
 
+    std::map<std::string, Scanner::Token::SubType> Scanner::Token::subTypes{
+            {"(", SubType::Paren},
+            {")", SubType::Paren},
+            {",", SubType::Comma},
+            {"=", SubType::Assign},
+            {"!", SubType::Not},
+            {"+", SubType::Add},
+            {"-", SubType::Subtract},
+            {"*", SubType::Multiply},
+            {"/", SubType::Divide},
+            {"%", SubType::Modulus},
+            {"<", SubType::LessThan},
+            {"<=", SubType::LessEqual},
+            {">", SubType::GreaterThan},
+            {">=", SubType::GreaterEqual},
+            {"==", SubType::Equal},
+            {"!=", SubType::NotEqual},
+            {"&&", SubType::And},
+            {"||", SubType::Or},
+    };
+
     int Scanner::Token::identifierMaxLength = 31;
 
     template<>
@@ -96,25 +117,25 @@ std::ostream& operator<<(std::ostream &out, Scanner::Token const& token)
             break;
         case Scanner::Token::Type::BoolConstant:
         case Scanner::Token::Type::StringConstant:
-            out << Scanner::Token::getTypeName(token.type) << " (value = " << token.getValue<std::string>() << ")";
+            out << Scanner::Token::getTTypeName(token.type) << " (value = " << token.getValue<std::string>() << ")";
             break;
         case Scanner::Token::Type::IntConstant:
-            out << Scanner::Token::getTypeName(token.type) << " (value = " << token.getValue<int>() << ")";
+            out << Scanner::Token::getTTypeName(token.type) << " (value = " << token.getValue<int>() << ")";
             break;
         case Scanner::Token::Type::DoubleConstant:
-            out << Scanner::Token::getTypeName(token.type) << " (value = " << token.getValue<double>() << ")";
+            out << Scanner::Token::getTTypeName(token.type) << " (value = " << token.getValue<double>() << ")";
             break;
         case Scanner::Token::Type::Identifier:
-            out << Scanner::Token::getTypeName(token.type);
+            out << Scanner::Token::getTTypeName(token.type);
             if (token.value.length() > Scanner::Token::identifierMaxLength)
                 out << "(truncated to " + token.getValue<std::string>() + ")";
             break;
 
         default:
-            out << Scanner::Token::getTypeName(token.type);
-            // ommitting default case here since we may add other token types with different
+            out << Scanner::Token::getTTypeName(token.type);
+            // omitting default case here since we may add other token types with different
             // print options
-    };
+    }
 
     out << std::endl;
     // not ending with new line since caller may want to print their own new line

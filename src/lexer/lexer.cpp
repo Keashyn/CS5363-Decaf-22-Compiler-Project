@@ -12,6 +12,8 @@ void Scanner::Lexer::nextLine()
     lineStream.str(tmp);
     lineStream.clear();
 
+    //std::cout << "Getting line[" << lineNumber << "]: " << lineStream.str() << std::endl;
+
     // increment line number
     lineNumber++;
     // reset column number
@@ -56,7 +58,7 @@ bool Scanner::Lexer::skipComments()
     // comments must start with '\'
     if (commentStart != '/' || commentStart == -1)
     {
-        // std::cout << "line/character stream not starting with / exitiing" << std::endl;
+        // std::cout << "line/character stream not starting with / existing" << std::endl;
         return false;
     }
     else
@@ -116,14 +118,14 @@ bool Scanner::Lexer::skipComments()
 
 Scanner::Token Scanner::Lexer::getNextToken()
 {
-    // set token instance now so we can early out if file is at EOF
+    // set token instance now, so we can be early out if file is at EOF
     Token token = Token();
     // clear token buffer before progressing
     tokenBuffer.str(std::string());
 
 
     // takeWhile(isWhiteSpace());
-    // if we read new line and it's all white space/empty line then we need to go
+    // if we read new line, and it's all white space/empty line then we need to go
     // ahead and read next line
     // std::cout << "Testing if line is empty" << std::endl;
     // std::cout << "ASCII value of character : " << lineStream.peek() << std::endl;
@@ -173,7 +175,7 @@ Scanner::Token Scanner::Lexer::getNextToken()
     tokenBuffer << tmp;
     token.lineNumber = lineNumber;
     token.colStart = columnNumber;
-    // if it starts with a character its likely an identifier
+    // if it starts with a character it's likely an identifier
     if ( isAlpha()(tmp) )
     {
 
@@ -259,7 +261,7 @@ Scanner::Token Scanner::Lexer::getNextToken()
                             lineStream.putback(tmp);
                         }
                     }
-                        // not proper doulbe break out
+                        // not proper double break out
                     else
                     {
                         // lineStream.clear();
@@ -287,6 +289,7 @@ Scanner::Token Scanner::Lexer::getNextToken()
         token.type = Token::Type::Operator;
 
         // need to peek to see if next character is also an operator
+        char doubleCheck = tmp;
         tmp = lineStream.peek();
         if ( isOperator()(tmp) )
         {
@@ -305,6 +308,11 @@ Scanner::Token Scanner::Lexer::getNextToken()
                 token.type = op->second;
             }
         }
+
+        if ( tokenBuffer.str().length() < 2 && isOnlyDoubleCharOperator()(doubleCheck) )
+        {
+            throw UnrecognizedCharacter(lineNumber, tokenBuffer.str());
+        }
     }
     else if ( isSeparator()(tmp) )
     {
@@ -319,7 +327,7 @@ Scanner::Token Scanner::Lexer::getNextToken()
 
         takeWhile(isNotStringConstantEnd());
 
-        // takeWhile stops on qutoe, need to check if still in stream and consume
+        // takeWhile stops on quote, need to check if still in stream and consume
         // std::cout << "Checking to see if quote still in buffer: " << char(lineStream.peek()) << std::endl;
         if (lineStream.peek() != '\"')
         {
@@ -328,7 +336,7 @@ Scanner::Token Scanner::Lexer::getNextToken()
         }
         // string starts after quote increment column count
         columnNumber++;
-        // std::cout << "It is so we consume it now" << std::endl;
+        // std::cout << "It is, so we consume it now" << std::endl;
         lineStream.get(tmp);
         tokenBuffer << tmp;
         // exit(1);
@@ -338,7 +346,13 @@ Scanner::Token Scanner::Lexer::getNextToken()
         throw UnrecognizedCharacter(lineNumber, tokenBuffer.str());
     }
 
+    // assign subtype if exists;
+    auto sub = Token::subTypes.find(tokenBuffer.str());
+    if (sub != Token::subTypes.end())
+        token.subType = sub->second;
+
     token.value = tokenBuffer.str();
+    token.lineInfo = lineStream.str();
 
     return token;
 }
