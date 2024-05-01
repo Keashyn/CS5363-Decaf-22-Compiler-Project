@@ -1,13 +1,15 @@
+#!/usr/bin/env bash
+
 BASE_DIR="$(readlink -f $(dirname $0)/..)"
 # push base dir so we know where we are at
 pushd $BASE_DIR &> /dev/null
 
 pushd dependencies &> /dev/null
 
-# Check if cmake is installed and executable
-if [[ ! -x "$(command -v cmake)" && ! -x ./cmake-3.26.1-linux-x86_64/bin/cmake ]]; then
+
+if [[ ! -x "$(command -v cmake)" && ! -f ./cmake-3.26.1-linux-x86_64/bin/cmake ]]; then
     echo "Unpacking dependencies for build"
-    tar -xf ./cmake-3.26.1-linux-x86_64.tar.gz --verbose
+    tar -xf ./cmake-3.26.1-linux-x86_64.tar.gz
 fi
 
 PATH="$PATH:$(pwd)/cmake-3.26.1-linux-x86_64/bin"
@@ -17,6 +19,8 @@ popd &> /dev/null
 mkdir -p build
 
 cd build
+
+
 
 echo "Configuring project"
 cmake -S .. -B . 2> /dev/null
@@ -41,7 +45,7 @@ else
     echo "Running g++ build"
     g++ --std=c++11 build/*.cpp -o ./decaf-22
 
-    cp ./workdir
+    cp ./workdir/
 fi
 
 popd &> /dev/null

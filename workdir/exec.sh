@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 # Find base/source dir so we know where program exists
-# shellcheck disable=SC2046
 BASE_DIR="$(readlink -f $(dirname $0)/)"
 
 # we don't push into source directory since file path parameter may be relative
@@ -15,4 +14,4 @@ if [[ $# -lt 1 ]]; then
     exit 1
 fi
 
-${BASE_DIR}/decaff-22 "$1"
+${BASE_DIR}/decaf-22 $1

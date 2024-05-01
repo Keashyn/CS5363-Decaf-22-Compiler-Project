@@ -1,21 +1,25 @@
+#pragma once
+
 #include <string>
 #include <iomanip>
 #include <exception>
 
 #include "ParseTree.hpp"
 
-namespace Parser {
 
+namespace Parser
+{
     class ParseException : public std::exception {
         std::string message;
 
     public:
-        ParseException(const char *msg) :
+        ParseException(char *msg) :
                 message(msg)
         {
-        }
 
-        ParseException(Scanner::Token token)
+        };
+
+        ParseException(Scanner::Token token )
         {
             std::stringstream ss;
 
@@ -26,12 +30,12 @@ namespace Parser {
                << "*** syntax error" << std::endl;
 
             message = ss.str();
-        }
+        };
 
-        const char * what() const noexcept override {
+        const char * what() {
             return message.c_str();
         }
 
     };
 
-} // namespace Parser
+} // namespace parser

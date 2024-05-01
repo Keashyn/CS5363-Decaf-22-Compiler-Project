@@ -189,7 +189,7 @@ Scanner::Token Scanner::Lexer::getNextToken()
         auto op = Token::keywords.find(tokenBuffer.str());
         if (op != Token::keywords.end())
         {
-            // std::cout << "Token string is keyword found type: " << int(op->second) << std::endl;
+            // std::cout << "token string is keyword found type: " << int(op->second) << std::endl;
             token.type = op->second;
         } else if (tokenBuffer.str().length() > Token::identifierMaxLength)
         {

@@ -140,4 +140,4 @@ std::ostream& operator<<(std::ostream &out, Scanner::Token const& token);
 
 
 
-// namespace Token {
+// namespace token {

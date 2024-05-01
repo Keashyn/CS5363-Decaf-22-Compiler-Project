@@ -245,7 +245,7 @@
 #endif
 
 
-/* Common test initialiation/clean-up
+/* common test initialiation/clean-up
  *
  * In some test suites, it may be needed to perform some sort of the same
  * initialization and/or clean-up in all the tests.
